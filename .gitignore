@@ -1,5 +1,6 @@
 /src/.idea
 /src/ep1.iml
+/src/out/*
 .idea
 .classpath
 .project
