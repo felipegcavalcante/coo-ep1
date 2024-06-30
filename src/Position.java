@@ -29,4 +29,20 @@ public class Position {
     public void setX(double x) {
         this.x = x;
     }
+
+    public void decreaseX(double decrement) {
+        this.x -= decrement;
+    }
+
+    public void increaseX(double increment) {
+        this.x += increment;
+    }
+
+    public void increaseY(double increment) {
+        this.y += increment;
+    }
+
+    public void decreaseY(double decrement) {
+        this.y -= decrement;
+    }
 }

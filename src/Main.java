@@ -33,6 +33,17 @@ public class Main {
 		return i;
 	}
 
+	public static int findFreeIndexProjectiles(Projectile [] stateArray){
+
+		int i;
+
+		for(i = 0; i < stateArray.length; i++){
+			if(stateArray[i].getState() == State.INACTIVE) break;
+		}
+
+		return i;
+	}
+
 	/* Encontra e devolve o conjunto de índices (a quantidade */
 	/* de índices é defnida através do parâmetro "amount") do */
 	/* array, referentes a posições "inativas".               */
@@ -55,7 +66,6 @@ public class Main {
 	}
 
 	/* Método principal */
-
 	public static void main(String [] args){
 
 		/* Indica que o jogo está em execução */
@@ -76,13 +86,16 @@ public class Main {
 		);
 
 		/* variáveis dos projéteis disparados pelo player */
-		int [] projectile_states = new int[10];					// estados
-		double [] projectile_X = new double[10];				// coordenadas x
-		double [] projectile_Y = new double[10];				// coordenadas y
-		double [] projectile_VX = new double[10];				// velocidades no eixo x
-		double [] projectile_VY = new double[10];				// velocidades no eixo y
+		Projectile[] playerProjectiles = new Projectile[10];
+//		int [] projectile_states = new int[10];					// estados
+//		double [] projectile_X = new double[10];				// coordenadas x
+//		double [] projectile_Y = new double[10];				// coordenadas y
+//		double [] projectile_VX = new double[10];				// velocidades no eixo x
+//		double [] projectile_VY = new double[10];				// velocidades no eixo y
+
 
 		/* variáveis dos inimigos tipo 1 */
+//		Enemy1 enemy1[] = new Enemy1[10];
 		int [] enemy1_states = new int[10];						// estados
 		double [] enemy1_X = new double[10];					// coordenadas x
 		double [] enemy1_Y = new double[10];					// coordenadas y
@@ -97,6 +110,7 @@ public class Main {
 
 		/* variáveis dos inimigos tipo 2 */
 
+//		Enemy2 enemy2[] = new Enemy2[10];
 		int [] enemy2_states = new int[10];						// estados
 		double [] enemy2_X = new double[10];					// coordenadas x
 		double [] enemy2_Y = new double[10];					// coordenadas y
@@ -111,7 +125,7 @@ public class Main {
 		long nextEnemy2 = currentTime + 7000;					// instante em que um novo inimigo 2 deve aparecer
 
 		/* variáveis dos projéteis lançados pelos inimigos (tanto tipo 1, quanto tipo 2) */
-
+//		Projectile enemyProjectiles[] = new Projectile[200];
 		int [] e_projectile_states = new int[200];				// estados
 		double [] e_projectile_X = new double[200];				// coordenadas x
 		double [] e_projectile_Y = new double[200];				// coordenadas y
@@ -132,10 +146,45 @@ public class Main {
 		double background2_count = 0.0;
 
 		/* inicializações */
-		for(int i = 0; i < projectile_states.length; i++) projectile_states[i] = INACTIVE;
+//		for(int i = 0; i < projectile_states.length; i++) projectile_states[i] = INACTIVE;
+		for (int i = 0; i < playerProjectiles.length; i++) {
+			playerProjectiles[i] = new Projectile(
+					new Position(0, 0),
+					new Speed(0, 0),
+					2.0
+			);
+		}
+
 		for(int i = 0; i < e_projectile_states.length; i++) e_projectile_states[i] = INACTIVE;
+//		for (int i = 0; i < enemyProjectiles.length; i++) {
+//			enemyProjectiles[i] = new Projectile(
+//					new Position(0, 0),
+//					new Speed(0, 0),
+//					2.0
+//			);
+//		}
+
 		for(int i = 0; i < enemy1_states.length; i++) enemy1_states[i] = INACTIVE;
+//		for (int i = 0; i < enemy1.length; i++) {
+//			enemy1[i] = new Enemy1(
+//					new Position(0, 0),
+//					new Speed(0, 0),
+//					0,
+//					new Explosion(0, 0),
+//					currentTime + 2000
+//			);
+//		}
+
 		for(int i = 0; i < enemy2_states.length; i++) enemy2_states[i] = INACTIVE;
+//		for (int i = 0; i < enemy2.length; i++) {
+//			enemy2[i] = new Enemy2(
+//					new Position(0, 0),
+//					new Speed(0, 0),
+//					0,
+//					new Explosion(0, 0),
+//					currentTime + 7000
+//			);
+//		}
 
 		for(int i = 0; i < background1_X.length; i++){
 
@@ -177,11 +226,9 @@ public class Main {
 			/* Usada para atualizar o estado dos elementos do jogo    */
 			/* (player, projéteis e inimigos) "delta" indica quantos  */
 			/* ms se passaram desde a última atualização.             */
-
 			delta = System.currentTimeMillis() - currentTime;
 
 			/* Já a variável "currentTime" nos dá o timestamp atual.  */
-
 			currentTime = System.currentTimeMillis();
 
 			/***************************/
@@ -227,14 +274,14 @@ public class Main {
 
 			/* colisões projeteis (player) - inimigos */
 
-			for(int k = 0; k < projectile_states.length; k++){
+			for(int k = 0; k < playerProjectiles.length; k++){
 
 				for(int i = 0; i < enemy1_states.length; i++){
 
 					if(enemy1_states[i] == ACTIVE){
 
-						double dx = enemy1_X[i] - projectile_X[k];
-						double dy = enemy1_Y[i] - projectile_Y[k];
+						double dx = enemy1_X[i] - playerProjectiles[k].getPositionX();
+						double dy = enemy1_Y[i] - playerProjectiles[k].getPositionY();
 						double dist = Math.sqrt(dx * dx + dy * dy);
 
 						if(dist < enemy1_radius){
@@ -252,8 +299,8 @@ public class Main {
 
 					if(enemy2_states[i] == ACTIVE){
 
-						double dx = enemy2_X[i] - projectile_X[k];
-						double dy = enemy2_Y[i] - projectile_Y[k];
+						double dx = enemy2_X[i] - playerProjectiles[k].getPositionX();
+						double dy = enemy2_Y[i] - playerProjectiles[k].getPositionY();
 						double dist = Math.sqrt(dx * dx + dy * dy);
 
 						if(dist < enemy2_radius){
@@ -274,21 +321,21 @@ public class Main {
 
 			/* projeteis (player) */
 
-			for(int i = 0; i < projectile_states.length; i++){
+			for(int i = 0; i < playerProjectiles.length; i++) {
+				Projectile projectile = playerProjectiles[i];
 
-				if(projectile_states[i] == ACTIVE){
-
-					/* verificando se projétil saiu da tela */
-					if(projectile_Y[i] < 0) {
-
-						projectile_states[i] = INACTIVE;
-					}
-					else {
-
-						projectile_X[i] += projectile_VX[i] * delta;
-						projectile_Y[i] += projectile_VY[i] * delta;
-					}
+				if(!projectile.isActive()){
+					continue;
 				}
+
+				/* verificando se projétil saiu da tela */
+				if(projectile.getPositionY() < 0) {
+					projectile.deactivate();
+					continue;
+				}
+
+				projectile.increasePositionX(projectile.getSpeed().getSpeedX() * delta);
+				projectile.increasePositionY(projectile.getSpeed().getSpeedY() * delta);
 			}
 
 			/* projeteis (inimigos) */
@@ -504,14 +551,17 @@ public class Main {
 
 					if(currentTime > player.getNextShot()){
 
-						int free = findFreeIndex(projectile_states);
+						int free = findFreeIndexProjectiles(playerProjectiles);
 
-						if(free < projectile_states.length){
-							projectile_X[free] = player.getPosition().getX();
-							projectile_Y[free] = player.getPosition().getY() - 2 * player.getRadius();
-							projectile_VX[free] = 0.0;
-							projectile_VY[free] = -1.0;
-							projectile_states[free] = 1;
+						if(free < playerProjectiles.length){
+							Projectile projectile = playerProjectiles[free];
+
+							projectile.setPosition(
+								player.getPosition().getX(),
+								player.getPosition().getY() - 2 * player.getRadius()
+							);
+							projectile.setSpeed(0.0, -1.0);
+							projectile.setState(State.ACTIVE);
 							player.setNextShot(currentTime + 100);
 						}
 					}
@@ -568,14 +618,14 @@ public class Main {
 
 			/* deenhando projeteis (player) */
 
-			for(int i = 0; i < projectile_states.length; i++){
+			for(int i = 0; i < playerProjectiles.length; i++){
+				Projectile projectile = playerProjectiles[i];
 
-				if(projectile_states[i] == ACTIVE){
-
+				if(projectile.isActive()){
 					GameLib.setColor(Color.GREEN);
-					GameLib.drawLine(projectile_X[i], projectile_Y[i] - 5, projectile_X[i], projectile_Y[i] + 5);
-					GameLib.drawLine(projectile_X[i] - 1, projectile_Y[i] - 3, projectile_X[i] - 1, projectile_Y[i] + 3);
-					GameLib.drawLine(projectile_X[i] + 1, projectile_Y[i] - 3, projectile_X[i] + 1, projectile_Y[i] + 3);
+					GameLib.drawLine(projectile.getPositionX(), projectile.getPositionY() - 5, projectile.getPositionX(), projectile.getPositionY() + 5);
+					GameLib.drawLine(projectile.getPositionX() - 1, projectile.getPositionY() - 3, projectile.getPositionX() - 1, projectile.getPositionY() + 3);
+					GameLib.drawLine(projectile.getPositionX() + 1, projectile.getPositionY() - 3, projectile.getPositionX() + 1, projectile.getPositionY() + 3);
 				}
 			}
 
