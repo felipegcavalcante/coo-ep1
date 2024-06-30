@@ -5,6 +5,7 @@ public class Player {
     private double radius;
     private long nextShot;
     private Explosion explosion;
+    private int hp;
 
     public Player(State state, Position position, Speed speed, double radius, long nextShot, Explosion explosion) {
         this.state = state;
@@ -13,7 +14,9 @@ public class Player {
         this.radius = radius;
         this.nextShot = nextShot;
         this.explosion = explosion;
+        this.hp = 10;
     }
+
     public State getState() { return state; }
     public Position getPosition() { return position; }
     public Speed getSpeed() { return speed; }
@@ -24,6 +27,7 @@ public class Player {
         this.state = State.EXPLODING;
         this.explosion = new Explosion(currentTime, currentTime + 2000);
     }
+
     public void activate() { this.state = State.ACTIVE; }
 
     public void setPositionX(double x) {
@@ -36,5 +40,21 @@ public class Player {
 
     public void setNextShot(long nextShot) {
         this.nextShot = nextShot;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void collectPowerUp() {
+        this.hp++;
+    }
+
+    public void receiveDemage() {
+        this.hp--;
+
+        if (this.hp <= 0) {
+            this.state = State.EXPLODING;
+        }
     }
 }
